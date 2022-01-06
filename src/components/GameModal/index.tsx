@@ -1,16 +1,13 @@
 import React from "react"
 import * as M from "@mui/material"
+
 import { useAppSelector } from "../../redux/hooks"
 import { currentGame } from "../../redux/store"
-import { Icon } from "../../types"
 import useSocket from "../../hooks/socket"
 
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-}
+import { Icon } from "../../types"
+import * as styles from "./styles"
+
 type Props = {
   open: boolean
 }
@@ -23,10 +20,7 @@ const GameModal = (props: Props) => {
         <img
           alt={String(icon)}
           src={`/assets/svg/${icon}.svg`}
-          style={{
-            height: 24,
-            width: 24,
-          }}
+          style={styles.scoreIcon}
         />
         <M.Typography>
           {game.history.filter((e) => e === icon).length}
@@ -37,24 +31,15 @@ const GameModal = (props: Props) => {
   )
   return (
     <M.Modal open={props.open}>
-      <M.Stack sx={{ ...style, alignItems: "center" }}>
+      <M.Stack sx={styles.modal}>
         {game.winner && (
           <img
             alt={String(game.winner.icon)}
             src={`/assets/svg/${game.winner.icon}.svg`}
-            style={{
-              height: 80,
-              width: 80,
-              marginBottom: -40,
-              zIndex: 2,
-              filter:
-                game.winner.icon === "X"
-                  ? "drop-shadow(0px 0px 8px rgba(27, 217, 239, 0.65)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.25))"
-                  : "drop-shadow(0px 0px 8px rgba(252, 142, 233, 0.65)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.25))",
-            }}
+            style={styles.icon(game.winner.icon)}
           />
         )}
-        <M.Card sx={{ p: 4, pb: 0, borderRadius: 4, mb: 4 }}>
+        <M.Card sx={styles.card}>
           <M.CardContent sx={{ pt: 3 }}>
             <M.Box justifyContent="center" textAlign="center">
               {game.winner && (
