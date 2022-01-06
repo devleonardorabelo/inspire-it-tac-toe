@@ -1,24 +1,27 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { Game } from "../types"
 
 export const counterSlice = createSlice({
   name: "counter",
   initialState: {
-    squares: Array(9).fill(null),
-    players: [
-      { name: "Player 1", history: [""], icon: "X" },
-      { name: "Player 2", history: [""], icon: "O" },
-    ],
+    game: {
+      board: Array(9).fill(null),
+      history: [],
+      players: [],
+      room: "",
+      status: "",
+      turn: "X",
+      winner: "",
+      draw: false,
+    } as Game,
   },
   reducers: {
-    setGame: (state, action) => {
-      state.squares = action.payload
-    },
-    resetGame: (state) => {
-      state.squares = counterSlice.getInitialState().squares
+    setGame: (state, action: PayloadAction<Game>) => {
+      state.game = action.payload
     },
   },
 })
 
-export const { setGame, resetGame } = counterSlice.actions
+export const { setGame } = counterSlice.actions
 
 export default counterSlice.reducer

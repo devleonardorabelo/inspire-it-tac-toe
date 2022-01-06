@@ -1,7 +1,7 @@
 import * as React from "react"
 import * as M from "@mui/material"
 type Props = {
-  value: string
+  value: string | null
   onClick: React.MouseEventHandler<HTMLButtonElement>
 }
 const SquareButton = (props: Props) => {

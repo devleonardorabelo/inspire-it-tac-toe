@@ -1,65 +1,62 @@
 import React from "react"
 import * as M from "@mui/material"
 import { SquareButton } from "./components"
-import { useDispatch, useSelector } from "react-redux"
-import { setGame, resetGame } from "./redux/save"
-import { FINISH_TEMPLATE } from "./constants"
+import io, { Socket } from "socket.io-client"
+import { Game } from "./types"
+import { useAppDispatch, useAppSelector } from "./redux/hooks"
+import { currentGame } from "./redux/store"
+import { setGame } from "./redux/save"
+import "./styles.css"
 
 function App() {
-  const { squares, players } = useSelector((state: any) => state.game)
-  const dispatch = useDispatch()
+  const [room, setRoom] = React.useState("")
+  const [nickname, setNickname] = React.useState("")
+  const [connected, setConnected] = React.useState(false)
+  const [socket, setSocket] = React.useState<Socket | null>(null)
+  const { game } = useAppSelector(currentGame)
+  const dispatch = useAppDispatch()
 
-  const nextValue = React.useMemo(() => {
-    return squares.filter(Boolean).length % 2 === 0 ? players[0] : players[1]
-  }, [players, squares])
-
-  const winner = React.useMemo(() => {
-    for (let i = 0; i < FINISH_TEMPLATE.length; i++) {
-      const [a, b, c] = FINISH_TEMPLATE[i]
-      if (
-        squares[a] &&
-        squares[a] === squares[b] &&
-        squares[a] === squares[c]
-      ) {
-        return squares[a]
-      }
-    }
-    return null
-  }, [squares])
-
-  const status = React.useMemo(() => {
-    return winner
-      ? `Vencedor: ${winner}`
-      : squares.every(Boolean)
-      ? "Empate"
-      : `Jogador da vez: ${nextValue.name}`
-  }, [nextValue, squares, winner])
+  React.useEffect(() => {
+    const socketClient = io("http://192.168.1.5:3001/", {
+      transports: ["websocket"],
+    })
+    socketClient.on("board", (e: Game) => dispatch(setGame(e)))
+    socketClient.on("connection", () => {
+      setConnected(true)
+    })
+    setSocket(socketClient)
+  }, [dispatch])
 
   const selectSquare = React.useCallback(
-    (square: any) => {
-      if (winner || squares[square]) {
-        return
-      }
-      const squaresCopy = [...squares]
-      squaresCopy[square] = nextValue.icon
-      dispatch(setGame(squaresCopy))
+    (pos: number) => {
+      socket?.emit("move", { pos, room, nickname })
     },
-    [dispatch, nextValue, squares, winner]
+    [nickname, room, socket]
   )
 
-  const restart = React.useCallback(() => dispatch(resetGame()), [dispatch])
+  const restart = React.useCallback(
+    () => socket?.emit("restart", room),
+    [socket, room]
+  )
+  const createRoom = React.useCallback(() => {
+    socket?.emit("enterTheRoom", { room, nickname })
+  }, [socket, room, nickname])
 
   // ? RENDER ? //
   const renderSquare = React.useCallback(
     (pos: number) => {
       return (
-        <SquareButton value={squares[pos]} onClick={() => selectSquare(pos)} />
+        <SquareButton
+          key={pos}
+          value={game.board[pos]}
+          onClick={() => selectSquare(pos)}
+        />
       )
     },
-    [selectSquare, squares]
+    [game.board, selectSquare]
   )
 
-  const renderFrameRow = React.useCallback(
+  const renderBoardRow = React.useCallback(
     (startPos: number) => (
       <M.Stack direction="row">
         {[...Array(3)].map((_, index) => renderSquare(startPos + index))}
@@ -68,28 +65,75 @@ function App() {
     [renderSquare]
   )
 
-  return (
-    <M.Container sx={{ maxHeight: "100vh" }}>
-      <M.Stack direction="row">
-        <M.Box>
-          <M.Avatar>1</M.Avatar>
-          <M.Typography>{players[0].name}</M.Typography>
-          <M.Typography className="status">{status}</M.Typography>
-          <M.Button variant="contained" onClick={restart}>
-            Restart
-          </M.Button>
-        </M.Box>
+  const renderHistory = React.useCallback(
+    () =>
+      game.history.map((each, index) => (
+        <M.Typography key={index}>{each}</M.Typography>
+      )),
+    [game.history]
+  )
 
-        <M.Stack>
-          {renderFrameRow(0)}
-          {renderFrameRow(3)}
-          {renderFrameRow(6)}
+  return (
+    <M.Container sx={{ height: "100vh" }}>
+      {connected ? (
+        <>
+          <M.Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ height: "100%" }}
+          >
+            <M.Box>
+              <M.Card>
+                <M.CardContent>
+                  <M.Avatar>1</M.Avatar>
+                  <M.Typography>{game.players[0]?.nickname}</M.Typography>
+                  {renderHistory()}
+                </M.CardContent>
+              </M.Card>
+            </M.Box>
+
+            <M.Stack>
+              {renderBoardRow(0)}
+              {renderBoardRow(3)}
+              {renderBoardRow(6)}
+            </M.Stack>
+            <M.Box>
+              <M.Card>
+                <M.CardContent>
+                  <M.Avatar>2</M.Avatar>
+                  <M.Typography>{game.players[1]?.nickname}</M.Typography>
+                  {renderHistory()}
+                </M.CardContent>
+              </M.Card>
+            </M.Box>
+          </M.Stack>
+
+          <M.Typography className="status">{game.winner}</M.Typography>
+          {(game.draw || game.winner) && (
+            <M.Button variant="contained" onClick={restart}>
+              Jogar de novo
+            </M.Button>
+          )}
+        </>
+      ) : (
+        <M.Stack spacing={2}>
+          {/* <M.Button variant="contained" onClick={restart}>
+            Criar
+          </M.Button> */}
+          <M.TextField
+            onChange={(e) => setNickname(e.target.value)}
+            label="Nome de Jogador"
+          />
+          <M.TextField
+            onChange={(e) => setRoom(e.target.value)}
+            label="ID da sala"
+          />
+          <M.Button variant="contained" onClick={createRoom}>
+            Entrar
+          </M.Button>
         </M.Stack>
-        <M.Box>
-          <M.Avatar>2</M.Avatar>
-          <M.Typography>{players[1].name}</M.Typography>
-        </M.Box>
-      </M.Stack>
+      )}
     </M.Container>
   )
 }
