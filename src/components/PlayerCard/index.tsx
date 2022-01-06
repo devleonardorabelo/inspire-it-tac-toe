@@ -36,22 +36,41 @@ const PlayerCard = (props: Props) => {
     [game.history, playerData?.icon]
   )
   return (
-    <M.Stack direction="column" alignItems="center">
-      <img
-        alt={String(props.player)}
-        src={`/assets/svg/${props.player}.svg`}
-        style={{
-          height: 80,
-          width: 80,
-          marginBottom: -40,
-          zIndex: 2,
-          filter:
-            props.player === "X"
-              ? "drop-shadow(0px 0px 8px rgba(27, 217, 239, 0.65)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.25))"
-              : "drop-shadow(0px 0px 8px rgba(252, 142, 233, 0.65)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.25))",
+    <M.Stack alignItems="center">
+      <M.Stack sx={{ zIndex: 2, marginBottom: "-40px", transition: "1s" }}>
+        {game.turn === playerData?.nickname && (
+          <img
+            alt=""
+            src={`/assets/svg/arrow.svg`}
+            style={{
+              height: 80,
+              width: 80,
+            }}
+          />
+        )}
+        <img
+          alt={String(props.player)}
+          src={`/assets/svg/${props.player}.svg`}
+          style={{
+            height: 80,
+            width: 80,
+
+            opacity: game.turn === playerData?.nickname ? 1 : 0.5,
+            filter:
+              props.player === "X"
+                ? "drop-shadow(0px 0px 8px rgba(27, 217, 239, 0.65)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.25))"
+                : "drop-shadow(0px 0px 8px rgba(252, 142, 233, 0.65)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.25))",
+          }}
+        />
+      </M.Stack>
+
+      <M.Card
+        sx={{
+          paddingTop: "40px",
+          px: 4,
+          opacity: game.turn === playerData?.nickname ? 1 : 0.5,
         }}
-      />
-      <M.Card sx={{ paddingTop: "40px", px: 4 }}>
+      >
         <M.CardContent>
           <M.Box justifyContent="center" textAlign="center">
             {playerData ? (
