@@ -57,11 +57,13 @@ const GameModal = (props: Props) => {
         <M.Card sx={{ p: 4, pb: 0, borderRadius: 4, mb: 4 }}>
           <M.CardContent sx={{ pt: 3 }}>
             <M.Box justifyContent="center" textAlign="center">
-              <M.Typography variant="h3">
-                {game.winner?.nickname.toUpperCase()}
-              </M.Typography>
+              {game.winner && (
+                <M.Typography variant="h3">
+                  {game.winner?.nickname.toUpperCase()}
+                </M.Typography>
+              )}
               <M.Typography variant="h6" sx={{ marginTop: "-8px", mb: 2 }}>
-                WINNER
+                {game.draw ? "DRAW" : "WINNER"}
               </M.Typography>
               <M.Divider />
               <M.Stack
