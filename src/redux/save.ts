@@ -4,6 +4,9 @@ import { Game } from "../types"
 export const counterSlice = createSlice({
   name: "counter",
   initialState: {
+    nickname: "",
+    room: null as string | null,
+    connected: false,
     game: {
       board: Array(9).fill(null),
       history: [],
@@ -22,9 +25,19 @@ export const counterSlice = createSlice({
     setGame: (state, action: PayloadAction<Game>) => {
       state.game = action.payload
     },
+    setNickname: (state, action: PayloadAction<string>) => {
+      state.nickname = action.payload
+    },
+    setRoom: (state, action: PayloadAction<string>) => {
+      state.room = action.payload
+    },
+    setIsConnected: (state, action: PayloadAction<boolean>) => {
+      state.connected = action.payload
+    },
   },
 })
 
-export const { setGame } = counterSlice.actions
+export const { setGame, setNickname, setRoom, setIsConnected } =
+  counterSlice.actions
 
 export default counterSlice.reducer
