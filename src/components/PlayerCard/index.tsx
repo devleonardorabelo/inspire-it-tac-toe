@@ -5,6 +5,8 @@ import * as M from "@mui/material"
 import { useAppSelector } from "../../redux/hooks"
 import { currentGame } from "../../redux/store"
 import { Icon } from "../../types"
+import "./styles.css"
+
 type Props = {
   player: Icon
 }
@@ -36,15 +38,39 @@ const PlayerCard = (props: Props) => {
     [game.history, playerData?.icon]
   )
   return (
-    <M.Stack alignItems="center">
-      <M.Stack sx={{ zIndex: 2, marginBottom: "-40px", transition: "1s" }}>
+    <M.Stack
+      alignItems="center"
+      sx={{
+        width: "100%",
+        transition: "1s",
+        background: "rgba(28, 28, 28, 0.7)",
+        border: "1 px solid rgba(102, 102, 102, 0.3)",
+        borderRadius: 4,
+        backdropFilter: "blur(8px) !important",
+        filter:
+          game.turn === playerData?.nickname
+            ? "grayscale(0) brightness(1)"
+            : "grayscale(1) brightness(0.5)",
+      }}
+    >
+      <M.Stack
+        sx={{
+          zIndex: 2,
+          marginTop: "-40px",
+        }}
+      >
         {game.turn === playerData?.nickname && (
           <img
             alt=""
             src={`/assets/svg/arrow.svg`}
             style={{
-              height: 80,
-              width: 80,
+              height: 36,
+              width: 36,
+              position: "absolute",
+              top: -60,
+              alignSelf: "center",
+              zIndex: 2,
+              animation: "slide 2s infinite",
             }}
           />
         )}
@@ -54,8 +80,6 @@ const PlayerCard = (props: Props) => {
           style={{
             height: 80,
             width: 80,
-
-            opacity: game.turn === playerData?.nickname ? 1 : 0.5,
             filter:
               props.player === "X"
                 ? "drop-shadow(0px 0px 8px rgba(27, 217, 239, 0.65)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.25))"
@@ -66,12 +90,11 @@ const PlayerCard = (props: Props) => {
 
       <M.Card
         sx={{
-          paddingTop: "40px",
-          px: 4,
-          opacity: game.turn === playerData?.nickname ? 1 : 0.5,
+          width: "100%",
+          background: "transparent !important",
         }}
       >
-        <M.CardContent>
+        <M.CardContent sx={{ background: "transparent" }}>
           <M.Box justifyContent="center" textAlign="center">
             {playerData ? (
               <>

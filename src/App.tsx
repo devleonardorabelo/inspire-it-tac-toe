@@ -1,6 +1,6 @@
 import React from "react"
 import * as M from "@mui/material"
-import { GameModal, PlayerCard, SquareButton } from "./components"
+import { GameModal, PlayerCard, SquareButton, WaitingModal } from "./components"
 import io, { Socket } from "socket.io-client"
 import { Game } from "./types"
 import { useAppDispatch, useAppSelector } from "./redux/hooks"
@@ -56,12 +56,8 @@ function App() {
     [game.board, selectSquare]
   )
 
-  const renderBoardRow = React.useCallback(
-    (startPos: number) => (
-      <M.Stack direction="row">
-        {[...Array(3)].map((_, index) => renderSquare(startPos + index))}
-      </M.Stack>
-    ),
+  const renderBoard = React.useMemo(
+    () => [...Array(9)].map((_, index) => renderSquare(index)),
     [renderSquare]
   )
 
@@ -71,38 +67,96 @@ function App() {
         open={game.draw || !!game.winner?.nickname}
         onSubmit={restart}
       />
-
-      <M.Container sx={{ height: "100vh" }}>
+      <WaitingModal open={connected && game.players.length !== 2} />
+      <M.Container
+        sx={{
+          minHeight: "100vh",
+          overflow: "y",
+        }}
+      >
         {connected ? (
           <>
             <M.Stack
               direction="row"
-              justifyContent="space-between"
+              justifyContent="center"
               alignItems="center"
-              sx={{ height: "100%" }}
+              p={2}
+              sx={{
+                minHeight: "100vh",
+                margin: "0 auto",
+                alignSelf: "center",
+                justifySelf: "center",
+                boxSizing: "border-box",
+              }}
             >
-              <PlayerCard player="X" />
-
               <M.Box
-                sx={{
-                  background: "rgba(28, 28, 28, 0.5)",
-                  backdropFilter: "blur(43px)",
-                  borderRadius: 4,
+                gridTemplateAreas={{
+                  xs: `"board board" "playerX playerO"`,
+                  md: `"playerX board playerO"`,
                 }}
-                p={4}
+                gridTemplateColumns={{
+                  xs: "1fr 1fr",
+                  md: "200px 1fr 200px",
+                }}
+                gridTemplateRows={{
+                  xs: "auto auto",
+                  md: "1fr",
+                }}
+                rowGap={{
+                  xs: 12,
+                  md: 4,
+                }}
+                sx={{
+                  display: "grid",
+                  width: "100%",
+                  gap: 4,
+                  alignItems: "center",
+                  height: "100%",
+                }}
               >
-                <M.Stack
+                <M.Box sx={{ gridArea: "playerX" }}>
+                  <PlayerCard player="X" />
+                </M.Box>
+                <M.Box
                   sx={{
-                    background: "url(/assets/svg/board.svg) no-repeat center",
-                    backgroundSize: "cover",
+                    gridArea: "board",
+                    height: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    display: "flex",
                   }}
                 >
-                  {renderBoardRow(0)}
-                  {renderBoardRow(3)}
-                  {renderBoardRow(6)}
-                </M.Stack>
+                  <M.Box
+                    sx={{
+                      background: "rgba(28, 28, 28, 0.5)",
+                      backdropFilter: "blur(43px)",
+                      borderRadius: 4,
+                      width: "100%",
+                      p: 3,
+                    }}
+                    maxWidth={{
+                      sm: 400,
+                      md: "100%",
+                    }}
+                  >
+                    <M.Stack
+                      sx={{
+                        background:
+                          "url(/assets/svg/board.svg) no-repeat center",
+                        backgroundSize: "cover",
+                        display: "grid",
+                        gridTemplateAreas: `". . ." ". . ." ". . ."`,
+                        gap: 2,
+                      }}
+                    >
+                      {renderBoard}
+                    </M.Stack>
+                  </M.Box>
+                </M.Box>
+                <M.Grid sx={{ gridArea: "playerO" }}>
+                  <PlayerCard player="O" />
+                </M.Grid>
               </M.Box>
-              <PlayerCard player="O" />
             </M.Stack>
           </>
         ) : (

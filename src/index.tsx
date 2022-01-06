@@ -14,10 +14,16 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          background: "rgba(28, 28, 28, 0.5)",
-          border: "px solid rgba(102, 102, 102, 0.3)",
-          backdropFilter: "blur(43px)",
-          borderRadius: 8,
+          background: "rgba(28, 28, 28, 0.7)",
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          "&:hover": {
+            backgroundColor: "transparent",
+          },
         },
       },
     },

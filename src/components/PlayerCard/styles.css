@@ -1,0 +1,11 @@
+@keyframes slide {
+    0% {
+        top: -60px
+    }
+    50% {
+        top: -75px
+    }
+    100% {
+        top: -60px
+    }
+}
