@@ -1,10 +1,12 @@
 import React from "react"
-
 import * as M from "@mui/material"
 
 import { useAppSelector } from "../../redux/hooks"
 import { currentGame } from "../../redux/store"
+
 import { Icon } from "../../types"
+
+import * as styles from "./styles"
 import "./styles.css"
 
 type Props = {
@@ -12,6 +14,7 @@ type Props = {
 }
 const PlayerCard = (props: Props) => {
   const { game } = useAppSelector(currentGame)
+
   const playerData = React.useMemo(
     () => game.players.find((e) => e.icon === props.player),
     [game.players, props.player]
@@ -28,10 +31,7 @@ const PlayerCard = (props: Props) => {
         <img
           alt={String(playerData?.icon)}
           src={`/assets/svg/${playerData?.icon}.svg`}
-          style={{
-            height: 24,
-            width: 24,
-          }}
+          style={styles.scoreIcon}
         />
       </M.Stack>
     ),
@@ -40,51 +40,20 @@ const PlayerCard = (props: Props) => {
   return (
     <M.Stack
       alignItems="center"
-      sx={{
-        width: "100%",
-        transition: "1s",
-        background: "rgba(28, 28, 28, 0.7)",
-        border: "1 px solid rgba(102, 102, 102, 0.3)",
-        borderRadius: 4,
-        backdropFilter: "blur(8px) !important",
-        filter:
-          game.turn === playerData?.nickname
-            ? "grayscale(0) brightness(1)"
-            : "grayscale(1) brightness(0.5)",
-      }}
+      sx={styles.card(game.turn === playerData?.nickname)}
     >
-      <M.Stack
-        sx={{
-          zIndex: 2,
-          marginTop: "-40px",
-        }}
-      >
+      <M.Stack sx={styles.iconContainer}>
         {game.turn === playerData?.nickname && (
           <img
             alt=""
             src={`/assets/svg/arrow.svg`}
-            style={{
-              height: 36,
-              width: 36,
-              position: "absolute",
-              top: -60,
-              alignSelf: "center",
-              zIndex: 2,
-              animation: "slide 2s infinite",
-            }}
+            style={styles.turnIndicator}
           />
         )}
         <img
           alt={String(props.player)}
           src={`/assets/svg/${props.player}.svg`}
-          style={{
-            height: 80,
-            width: 80,
-            filter:
-              props.player === "X"
-                ? "drop-shadow(0px 0px 8px rgba(27, 217, 239, 0.65)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.25))"
-                : "drop-shadow(0px 0px 8px rgba(252, 142, 233, 0.65)) drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.25))",
-          }}
+          style={styles.icon(props.player)}
         />
       </M.Stack>
 
