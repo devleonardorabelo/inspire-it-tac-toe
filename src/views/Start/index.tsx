@@ -13,7 +13,8 @@ const Start = () => {
   const { startGame } = useSocket()
   const [status, setStatus] = React.useState(initialStatus)
   const randomRoom = React.useMemo(
-    () => (Math.random() + 1).toString(36).substring(6).toUpperCase(),
+    () =>
+      (Math.random() + 1).toString(36).substring(6).toUpperCase().slice(0, 6),
     []
   )
   const dispatch = useAppDispatch()
