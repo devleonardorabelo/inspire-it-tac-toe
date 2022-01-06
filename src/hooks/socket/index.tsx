@@ -3,7 +3,7 @@ import io, { Socket } from "socket.io-client"
 
 // ? STATES ? //
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import { setGame, setIsConnected } from "../../redux/save"
+import { resetGame, setGame, setIsConnected } from "../../redux/save"
 import { currentGame } from "../../redux/store"
 
 import type { Game } from "../../types"
@@ -36,6 +36,10 @@ const useSocket = () => {
     socketClient.on("board", (e: Game) => dispatch(setGame(e)))
     socketClient.on("connection", () => {
       dispatch(setIsConnected(true))
+    })
+    socketClient.on("disconnect", (e) => {
+      dispatch(resetGame())
+      dispatch(setIsConnected(false))
     })
     setSocket(socketClient)
   }, [dispatch])
