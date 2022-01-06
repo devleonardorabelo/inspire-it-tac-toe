@@ -3,6 +3,7 @@ import * as M from "@mui/material"
 import { useAppSelector } from "../../redux/hooks"
 import { currentGame } from "../../redux/store"
 import { Icon } from "../../types"
+import useSocket from "../../hooks/socket"
 
 const style = {
   position: "absolute" as "absolute",
@@ -12,11 +13,10 @@ const style = {
 }
 type Props = {
   open: boolean
-  onSubmit: () => void
 }
 const GameModal = (props: Props) => {
   const { game } = useAppSelector(currentGame)
-
+  const { restart } = useSocket()
   const renderScore = React.useCallback(
     (icon: Icon) => (
       <M.Box>
@@ -83,7 +83,7 @@ const GameModal = (props: Props) => {
             </M.Box>
           </M.CardContent>
         </M.Card>
-        <M.Button sx={{ px: 4 }} variant="contained" onClick={props.onSubmit}>
+        <M.Button sx={{ px: 4 }} variant="contained" onClick={restart}>
           PLAY AGAIN
         </M.Button>
       </M.Stack>

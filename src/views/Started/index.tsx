@@ -1,21 +1,13 @@
 import React from "react"
 import * as M from "@mui/material"
-import { Socket } from "socket.io-client"
 import { PlayerCard, SquareButton } from "../../components"
 import { useAppSelector } from "../../redux/hooks"
 import { currentGame } from "../../redux/store"
-type Props = {
-  socket: Socket | null
-}
-const Started = ({ socket }: Props) => {
-  const { game, nickname, room } = useAppSelector(currentGame)
+import useSocket from "../../hooks/socket"
 
-  const selectSquare = React.useCallback(
-    (pos: number) => {
-      socket?.emit("move", { pos, room, nickname })
-    },
-    [nickname, room, socket]
-  )
+const Started = () => {
+  const { game } = useAppSelector(currentGame)
+  const { selectSquare } = useSocket()
 
   // ? RENDER ? //
   const renderSquare = React.useCallback(

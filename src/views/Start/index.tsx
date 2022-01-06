@@ -5,12 +5,12 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import { setNickname, setRoom } from "../../redux/save"
 import { currentGame } from "../../redux/store"
 import { Modal } from "../../design"
-type Props = {
-  socket: Socket | null
-}
+import useSocket from "../../hooks/socket"
+
 const initialStatus = { message: "", input: "", error: "" }
-const Start = ({ socket }: Props) => {
+const Start = () => {
   const { room, nickname } = useAppSelector(currentGame)
+  const { startGame } = useSocket()
   const [status, setStatus] = React.useState(initialStatus)
   const randomRoom = React.useMemo(
     () => (Math.random() + 1).toString(36).substring(6).toUpperCase(),
@@ -33,8 +33,8 @@ const Start = ({ socket }: Props) => {
       })
     }
     setStatus(initialStatus)
-    socket?.emit("enterTheRoom", { room, nickname })
-  }, [room, nickname, socket])
+    startGame()
+  }, [nickname.length, room, startGame])
 
   React.useEffect(() => {
     dispatch(setRoom(randomRoom))
