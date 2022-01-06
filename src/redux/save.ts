@@ -11,7 +11,10 @@ export const counterSlice = createSlice({
       room: "",
       status: "",
       turn: "X",
-      winner: "",
+      winner: {
+        nickname: "",
+        icon: null,
+      },
       draw: false,
     } as Game,
   },

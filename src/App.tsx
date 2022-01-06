@@ -1,6 +1,6 @@
 import React from "react"
 import * as M from "@mui/material"
-import { SquareButton } from "./components"
+import { GameModal, PlayerCard, SquareButton } from "./components"
 import io, { Socket } from "socket.io-client"
 import { Game } from "./types"
 import { useAppDispatch, useAppSelector } from "./redux/hooks"
@@ -65,76 +65,63 @@ function App() {
     [renderSquare]
   )
 
-  const renderHistory = React.useCallback(
-    () =>
-      game.history.map((each, index) => (
-        <M.Typography key={index}>{each}</M.Typography>
-      )),
-    [game.history]
-  )
-
   return (
-    <M.Container sx={{ height: "100vh" }}>
-      {connected ? (
-        <>
-          <M.Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ height: "100%" }}
-          >
-            <M.Box>
-              <M.Card>
-                <M.CardContent>
-                  <M.Avatar>1</M.Avatar>
-                  <M.Typography>{game.players[0]?.nickname}</M.Typography>
-                  {renderHistory()}
-                </M.CardContent>
-              </M.Card>
-            </M.Box>
+    <>
+      <GameModal
+        open={game.draw || !!game.winner?.nickname}
+        onSubmit={restart}
+      />
 
-            <M.Stack>
-              {renderBoardRow(0)}
-              {renderBoardRow(3)}
-              {renderBoardRow(6)}
+      <M.Container sx={{ height: "100vh" }}>
+        {connected ? (
+          <>
+            <M.Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{ height: "100%" }}
+            >
+              <PlayerCard player="X" />
+
+              <M.Box
+                sx={{
+                  background: "rgba(28, 28, 28, 0.5)",
+                  backdropFilter: "blur(43px)",
+                  borderRadius: 4,
+                }}
+                p={4}
+              >
+                <M.Stack
+                  sx={{
+                    background: "url(/assets/svg/board.svg) no-repeat center",
+                    backgroundSize: "cover",
+                  }}
+                >
+                  {renderBoardRow(0)}
+                  {renderBoardRow(3)}
+                  {renderBoardRow(6)}
+                </M.Stack>
+              </M.Box>
+              <PlayerCard player="O" />
             </M.Stack>
-            <M.Box>
-              <M.Card>
-                <M.CardContent>
-                  <M.Avatar>2</M.Avatar>
-                  <M.Typography>{game.players[1]?.nickname}</M.Typography>
-                  {renderHistory()}
-                </M.CardContent>
-              </M.Card>
-            </M.Box>
-          </M.Stack>
-
-          <M.Typography className="status">{game.winner}</M.Typography>
-          {(game.draw || game.winner) && (
-            <M.Button variant="contained" onClick={restart}>
-              Jogar de novo
+          </>
+        ) : (
+          <M.Stack spacing={2}>
+            <M.TextField
+              onChange={(e) => setNickname(e.target.value)}
+              label="Nome de Jogador"
+            />
+            <M.TextField
+              onChange={(e) => setRoom(e.target.value)}
+              label="ID da sala"
+            />
+            <M.Button variant="contained" onClick={createRoom}>
+              Entrar
             </M.Button>
-          )}
-        </>
-      ) : (
-        <M.Stack spacing={2}>
-          {/* <M.Button variant="contained" onClick={restart}>
-            Criar
-          </M.Button> */}
-          <M.TextField
-            onChange={(e) => setNickname(e.target.value)}
-            label="Nome de Jogador"
-          />
-          <M.TextField
-            onChange={(e) => setRoom(e.target.value)}
-            label="ID da sala"
-          />
-          <M.Button variant="contained" onClick={createRoom}>
-            Entrar
-          </M.Button>
-        </M.Stack>
-      )}
-    </M.Container>
+          </M.Stack>
+        )}
+      </M.Container>
+    </>
   )
 }
 

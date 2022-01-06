@@ -1,4 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    background: url('/public/assets/svg/background.svg') no-repeat, radial-gradient(50% 50% at 50% 50%, #2E0725 0%, #12031A 99.99%);
+    background-size: auto 100%;
+    background-position: center;
 }

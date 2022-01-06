@@ -1,4 +1,8 @@
 export type Icon = "X" | "O" | null
+export interface Player {
+  nickname: string
+  icon: Icon
+}
 export interface Game {
   room: string
   turn: string
@@ -6,9 +10,9 @@ export interface Game {
     nickname: string
     icon: Icon
   }[]
-  winner: string | null
+  winner: Player | null
   draw: boolean
-  history: number[]
+  history: Icon[]
   status: string
   board: (null | string)[]
 }
