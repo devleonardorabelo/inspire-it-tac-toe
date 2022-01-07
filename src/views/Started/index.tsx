@@ -60,10 +60,13 @@ const Started = () => {
             xs: 12,
             md: 4,
           }}
+          columnGap={{
+            xs: 4,
+            md: 8,
+          }}
           sx={{
             display: "grid",
             width: "100%",
-            gap: 4,
             alignItems: "center",
             height: "100%",
           }}

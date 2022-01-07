@@ -48,11 +48,11 @@ const Start = () => {
       <M.Snackbar open={!!status.message}>
         <M.Alert severity={status.type}>{status.message}</M.Alert>
       </M.Snackbar>
-      <M.Snackbar open={!!validation.message}>
-        <M.Alert severity="error">{validation.error}</M.Alert>
-      </M.Snackbar>
       <Modal open={true}>
         <M.Stack spacing={2}>
+          <M.Box justifyContent="center" display="flex" mb={2}>
+            <img src="/assets/svg/logo.svg" alt="tic-tac-toe" width="60%" />
+          </M.Box>
           <M.TextField
             onChange={(e) =>
               dispatch(setNickname(e.target.value.toUpperCase()))

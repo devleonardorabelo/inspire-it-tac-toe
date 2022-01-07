@@ -1,8 +1,0 @@
-@keyframes bubble {
-    0% {
-        background-size: 0%;
-    }
-    100% {
-        background-size: 100%;
-    }
-}

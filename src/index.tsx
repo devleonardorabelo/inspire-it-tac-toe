@@ -9,6 +9,18 @@ import store from "./redux/store"
 const theme = createTheme({
   palette: {
     mode: "dark",
+    primary: {
+      main: "#1BD9EF",
+    },
+    success: {
+      main: "#1BEF63",
+    },
+    info: {
+      main: "#1BD9EF",
+    },
+    error: {
+      main: "#EF1B1B",
+    },
   },
   components: {
     MuiCard: {
@@ -24,6 +36,9 @@ const theme = createTheme({
           "&:hover": {
             backgroundColor: "transparent",
           },
+        },
+        contained: {
+          fontWeight: "bold",
         },
       },
     },

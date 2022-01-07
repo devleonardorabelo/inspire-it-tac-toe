@@ -1,6 +1,5 @@
 import * as React from "react"
 import * as M from "@mui/material"
-import "./styles.css"
 
 type Props = {
   value: string | null
@@ -12,11 +11,11 @@ const SquareButton = (props: Props) => {
       variant="text"
       fullWidth
       sx={{
-        aspectRatio: "1",
-        backgroundImage: props.value
-          ? `url(/assets/svg/${props.value}.svg)`
+        aspectRatio: "1/1",
+        background: props.value
+          ? `url(/assets/svg/${props.value}.svg) no-repeat center`
           : "none",
-        animation: "bubble .3s forwards",
+        backgroundSize: "70%",
       }}
       onClick={props.onClick}
     ></M.Button>
