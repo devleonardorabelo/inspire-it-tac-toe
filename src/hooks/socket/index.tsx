@@ -30,9 +30,7 @@ const useSocket = () => {
   }, [nickname, room, socket])
 
   const initSocket = React.useCallback(() => {
-    const socketClient = io(process.env.REACT_APP_SOCKET_URL || "", {
-      transports: ["websocket"],
-    })
+    const socketClient = io(process.env.REACT_APP_SOCKET_URL || "")
     socketClient.on("board", (e: Game) => dispatch(setGame(e)))
     socketClient.on("connection", () => {
       dispatch(setIsConnected(true))

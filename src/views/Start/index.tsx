@@ -1,6 +1,5 @@
 import React from "react"
 import * as M from "@mui/material"
-import { Socket } from "socket.io-client"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
 import { setNickname, setRoom } from "../../redux/save"
 import { currentGame } from "../../redux/store"
