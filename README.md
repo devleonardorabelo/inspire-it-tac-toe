@@ -4,9 +4,17 @@
 
 ## About
 
+### Available in
+
+```
+https://inspire-it-tic-tac-toe-front.herokuapp.com/
+```
+
 ### Figma
 
-<a href="https://reactnative.dev/docs/environment-setup">Click here</a>
+```
+https://reactnative.dev/docs/environment-setup
+```
 
 ## Instalation
 
