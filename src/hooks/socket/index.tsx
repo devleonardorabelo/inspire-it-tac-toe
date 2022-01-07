@@ -8,6 +8,7 @@ import {
   resetStatus,
   setGame,
   setIsConnected,
+  setSocketConnection,
   setStatus,
 } from "../../redux/save"
 import { currentGame } from "../../redux/store"
@@ -41,15 +42,23 @@ const useSocket = () => {
 
   const initSocket = React.useCallback(() => {
     const socketClient = io(process.env.REACT_APP_SOCKET_URL || "")
-    socketClient.on("board", (e: Game) => {
-      dispatch(setGame(e))
+    // ? CONNECTION ? //
+    socketClient.on("connect", () => {
+      console.log("conectado")
+      dispatch(setSocketConnection(true))
     })
-    socketClient.on("connection", () => {
-      dispatch(setIsConnected(true))
-    })
-    socketClient.on("disconnect", (e) => {
+    socketClient.on("disconnect", () => {
       dispatch(resetGame())
       dispatch(setIsConnected(false))
+      console.log("desconectou")
+      dispatch(setSocketConnection(false))
+    })
+    // ? EVENTS ? //
+    socketClient.on("connected", () => {
+      dispatch(setIsConnected(true))
+    })
+    socketClient.on("board", (e: Game) => {
+      dispatch(setGame(e))
     })
     socketClient.on("leaveGame", (e) => {
       dispatch(resetGame())
@@ -68,7 +77,7 @@ const useSocket = () => {
     initSocket()
   }, [initSocket])
 
-  return { socket, restart, selectSquare, startGame, leaveGame }
+  return { restart, selectSquare, startGame, leaveGame }
 }
 
 export default useSocket

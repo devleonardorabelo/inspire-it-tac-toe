@@ -8,7 +8,8 @@ import useSocket from "../../hooks/socket"
 
 const initialStatus = { message: "", input: "", error: "" }
 const Start = () => {
-  const { room, nickname, status } = useAppSelector(currentGame)
+  const { room, nickname, status, socketConnected } =
+    useAppSelector(currentGame)
   const { startGame } = useSocket()
   const [validation, setValidation] = React.useState(initialStatus)
   const randomRoom = React.useMemo(
@@ -80,8 +81,13 @@ const Start = () => {
               maxLength: 6,
             }}
           />
-          <M.Button size="large" variant="contained" onClick={createRoom}>
-            PLAY NOW
+          <M.Button
+            size="large"
+            variant="contained"
+            onClick={createRoom}
+            disabled={!socketConnected}
+          >
+            {socketConnected ? "PLAY NOW" : "LOADING"}
           </M.Button>
         </M.Stack>
       </Modal>

@@ -9,6 +9,7 @@ export const initialState = {
     message: "",
     type: "error",
   } as ServerStatus,
+  socketConnected: false,
   game: {
     board: Array(9).fill(null),
     history: [],
@@ -49,6 +50,9 @@ export const counterSlice = createSlice({
     resetGame: (state) => {
       state.game = initialState.game
     },
+    setSocketConnection: (state, action: PayloadAction<boolean>) => {
+      state.socketConnected = action.payload
+    },
   },
 })
 
@@ -60,6 +64,7 @@ export const {
   setStatus,
   resetStatus,
   resetGame,
+  setSocketConnection,
 } = counterSlice.actions
 
 export default counterSlice.reducer
