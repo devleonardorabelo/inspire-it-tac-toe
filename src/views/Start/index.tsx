@@ -8,9 +8,9 @@ import useSocket from "../../hooks/socket"
 
 const initialStatus = { message: "", input: "", error: "" }
 const Start = () => {
-  const { room, nickname } = useAppSelector(currentGame)
+  const { room, nickname, status } = useAppSelector(currentGame)
   const { startGame } = useSocket()
-  const [status, setStatus] = React.useState(initialStatus)
+  const [validation, setValidation] = React.useState(initialStatus)
   const randomRoom = React.useMemo(
     () =>
       (Math.random() + 1).toString(36).substring(6).toUpperCase().slice(0, 6),
@@ -19,20 +19,20 @@ const Start = () => {
   const dispatch = useAppDispatch()
   const createRoom = React.useCallback(() => {
     if (nickname.length >= 9 || nickname.length <= 2) {
-      return setStatus({
+      return setValidation({
         message: "Invalid Nickname",
         input: "nickname",
         error: "Your nickname must be 3 to 8 characters long.",
       })
     }
     if (String(room).length <= 5) {
-      return setStatus({
+      return setValidation({
         message: "Invalid Room ID",
         input: "room",
         error: "Invalid Room ID",
       })
     }
-    setStatus(initialStatus)
+    setValidation(initialStatus)
     startGame()
   }, [nickname.length, room, startGame])
 
@@ -42,8 +42,14 @@ const Start = () => {
 
   return (
     <>
+      <M.Snackbar open={!!validation.message}>
+        <M.Alert severity="error">{validation.error}</M.Alert>
+      </M.Snackbar>
       <M.Snackbar open={!!status.message}>
-        <M.Alert severity="error">{status.error}</M.Alert>
+        <M.Alert severity={status.type}>{status.message}</M.Alert>
+      </M.Snackbar>
+      <M.Snackbar open={!!validation.message}>
+        <M.Alert severity="error">{validation.error}</M.Alert>
       </M.Snackbar>
       <Modal open={true}>
         <M.Stack spacing={2}>
@@ -53,8 +59,10 @@ const Start = () => {
             }
             label="Nickname"
             sx={{ minWidth: 200 }}
-            error={status.input === "nickname"}
-            helperText={status.input === "nickname" ? status.message : null}
+            error={validation.input === "nickname"}
+            helperText={
+              validation.input === "nickname" ? validation.message : null
+            }
             value={nickname}
             inputProps={{
               maxLength: 8,
@@ -64,8 +72,8 @@ const Start = () => {
             onChange={(e) => dispatch(setRoom(e.target.value.toUpperCase()))}
             label="Room ID"
             sx={{ minWidth: 200 }}
-            error={status.input === "room"}
-            helperText={status.input === "room" ? status.message : null}
+            error={validation.input === "room"}
+            helperText={validation.input === "room" ? validation.message : null}
             defaultValue={randomRoom}
             value={room}
             inputProps={{

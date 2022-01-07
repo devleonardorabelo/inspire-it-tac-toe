@@ -1,10 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { Game } from "../types"
+import { Game, ServerStatus } from "../types"
 
 export const initialState = {
   nickname: "",
   room: null as string | null,
   connected: false,
+  status: {
+    message: "",
+    type: "error",
+  } as ServerStatus,
   game: {
     board: Array(9).fill(null),
     history: [],
@@ -36,13 +40,26 @@ export const counterSlice = createSlice({
     setIsConnected: (state, action: PayloadAction<boolean>) => {
       state.connected = action.payload
     },
+    setStatus: (state, action: PayloadAction<ServerStatus>) => {
+      state.status = action.payload
+    },
+    resetStatus: (state) => {
+      state.status = initialState.status
+    },
     resetGame: (state) => {
       state.game = initialState.game
     },
   },
 })
 
-export const { setGame, setNickname, setRoom, setIsConnected, resetGame } =
-  counterSlice.actions
+export const {
+  setGame,
+  setNickname,
+  setRoom,
+  setIsConnected,
+  setStatus,
+  resetStatus,
+  resetGame,
+} = counterSlice.actions
 
 export default counterSlice.reducer

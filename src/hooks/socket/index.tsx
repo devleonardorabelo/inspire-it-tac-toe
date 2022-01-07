@@ -3,7 +3,13 @@ import io, { Socket } from "socket.io-client"
 
 // ? STATES ? //
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import { resetGame, setGame, setIsConnected } from "../../redux/save"
+import {
+  resetGame,
+  resetStatus,
+  setGame,
+  setIsConnected,
+  setStatus,
+} from "../../redux/save"
 import { currentGame } from "../../redux/store"
 
 import type { Game } from "../../types"
@@ -30,14 +36,13 @@ const useSocket = () => {
   }, [nickname, room, socket])
 
   const leaveGame = React.useCallback(() => {
-    socket?.emit("leave", room)
-  }, [room, socket])
+    socket?.emit("leave", { room, nickname })
+  }, [nickname, room, socket])
 
   const initSocket = React.useCallback(() => {
     const socketClient = io(process.env.REACT_APP_SOCKET_URL || "")
     socketClient.on("board", (e: Game) => {
       dispatch(setGame(e))
-      console.log(e)
     })
     socketClient.on("connection", () => {
       dispatch(setIsConnected(true))
@@ -49,6 +54,12 @@ const useSocket = () => {
     socketClient.on("leaveGame", (e) => {
       dispatch(resetGame())
       dispatch(setIsConnected(false))
+    })
+    socketClient.on("status", (e) => {
+      dispatch(setStatus(e))
+      setTimeout(() => {
+        dispatch(resetStatus())
+      }, 3000)
     })
     setSocket(socketClient)
   }, [dispatch])

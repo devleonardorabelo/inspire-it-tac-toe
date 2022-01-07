@@ -1,3 +1,5 @@
+import { AlertColor } from "@mui/material"
+
 export type Icon = "X" | "O" | null
 export interface Player {
   nickname: string
@@ -15,4 +17,9 @@ export interface Game {
   history: Icon[]
   status: string
   board: (null | string)[]
+}
+
+export type ServerStatus = {
+  type: AlertColor
+  message: string
 }
