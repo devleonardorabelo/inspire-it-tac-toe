@@ -29,13 +29,24 @@ const useSocket = () => {
     socket?.emit("enterTheRoom", { room, nickname })
   }, [nickname, room, socket])
 
+  const leaveGame = React.useCallback(() => {
+    socket?.emit("leave", room)
+  }, [room, socket])
+
   const initSocket = React.useCallback(() => {
     const socketClient = io(process.env.REACT_APP_SOCKET_URL || "")
-    socketClient.on("board", (e: Game) => dispatch(setGame(e)))
+    socketClient.on("board", (e: Game) => {
+      dispatch(setGame(e))
+      console.log(e)
+    })
     socketClient.on("connection", () => {
       dispatch(setIsConnected(true))
     })
     socketClient.on("disconnect", (e) => {
+      dispatch(resetGame())
+      dispatch(setIsConnected(false))
+    })
+    socketClient.on("leaveGame", (e) => {
       dispatch(resetGame())
       dispatch(setIsConnected(false))
     })
@@ -46,7 +57,7 @@ const useSocket = () => {
     initSocket()
   }, [initSocket])
 
-  return { socket, restart, selectSquare, startGame }
+  return { socket, restart, selectSquare, startGame, leaveGame }
 }
 
 export default useSocket

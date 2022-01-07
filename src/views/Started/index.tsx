@@ -7,7 +7,7 @@ import useSocket from "../../hooks/socket"
 
 const Started = () => {
   const { game } = useAppSelector(currentGame)
-  const { selectSquare } = useSocket()
+  const { selectSquare, leaveGame } = useSocket()
 
   // ? RENDER ? //
   const renderSquare = React.useCallback(
@@ -77,6 +77,7 @@ const Started = () => {
               height: "100%",
               alignItems: "center",
               justifyContent: "center",
+              flexDirection: "column",
               display: "flex",
             }}
           >
@@ -105,6 +106,9 @@ const Started = () => {
                 {renderBoard}
               </M.Stack>
             </M.Box>
+            <M.Button sx={{ mt: 2 }} variant="outlined" onClick={leaveGame}>
+              LEAVE
+            </M.Button>
           </M.Box>
           <M.Grid sx={{ gridArea: "playerO" }}>
             <PlayerCard player="O" />
