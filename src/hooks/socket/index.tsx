@@ -41,7 +41,9 @@ const useSocket = () => {
   }, [nickname, room, socket])
 
   const initSocket = React.useCallback(() => {
-    const socketClient = io(process.env.REACT_APP_SOCKET_URL || "")
+    const socketClient = io(process.env.REACT_APP_SOCKET_URL || "", {
+      transports: ["websocket"],
+    })
     // ? CONNECTION ? //
     socketClient.on("connect", () => {
       console.log("conectado")
