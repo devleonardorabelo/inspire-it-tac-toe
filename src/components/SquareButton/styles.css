@@ -1,0 +1,6 @@
+@supports not (aspect-ratio: 1/1) {
+    .square {
+        height: 10vw !important;
+        width: 10vw !important;
+    }
+}

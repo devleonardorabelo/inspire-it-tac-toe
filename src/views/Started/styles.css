@@ -1,0 +1,6 @@
+@supports not (aspect-ratio: 1/1) {
+    .board {
+        height: 30vw !important;
+        width: 30vw !important;
+    }
+}

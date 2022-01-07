@@ -1,24 +1,27 @@
 import * as React from "react"
-import * as M from "@mui/material"
-
+import "./styles.css"
 type Props = {
   value: string | null
   onClick: React.MouseEventHandler<HTMLButtonElement>
 }
 const SquareButton = (props: Props) => {
   return (
-    <M.Button
-      variant="text"
-      fullWidth
-      sx={{
+    <span
+      className="square"
+      style={{
         aspectRatio: "1/1",
         background: props.value
-          ? `url(/assets/svg/${props.value}.svg) no-repeat center`
+          ? `url(/assets/svg/${props.value}.svg) no-repeat center center / 70%`
           : "none",
-        backgroundSize: "70%",
+
+        display: "block",
+        width: "10vw",
+        height: "10vw",
+        minWidth: "100px",
+        minHeight: "100px",
       }}
       onClick={props.onClick}
-    ></M.Button>
+    ></span>
   )
 }
 export default SquareButton

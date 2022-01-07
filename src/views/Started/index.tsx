@@ -4,6 +4,7 @@ import { PlayerCard, SquareButton } from "../../components"
 import { useAppSelector } from "../../redux/hooks"
 import { currentGame } from "../../redux/store"
 import useSocket from "../../hooks/socket"
+import "./styles.css"
 
 const Started = () => {
   const { game } = useAppSelector(currentGame)
@@ -85,12 +86,14 @@ const Started = () => {
             }}
           >
             <M.Box
+              className="board"
               sx={{
                 background: "rgba(28, 28, 28, 0.5)",
                 backdropFilter: "blur(43px)",
                 borderRadius: 4,
-                width: "100%",
                 p: 3,
+                minWidth: "300px",
+                minHeight: "300px",
               }}
               maxWidth={{
                 sm: 400,
@@ -103,7 +106,6 @@ const Started = () => {
                   backgroundSize: "cover",
                   display: "grid",
                   gridTemplateAreas: `". . ." ". . ." ". . ."`,
-                  gap: 2,
                 }}
               >
                 {renderBoard}
