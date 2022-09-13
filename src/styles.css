@@ -1,11 +1,18 @@
+@font-face {
+  font-family: Lato;
+  src: url("../public/assets/svg/Lato-Bold.ttf");
+}
+
 body {
-    margin: 0;
-    padding: 0;
-    background: url('/public/assets/svg/background.svg') no-repeat, radial-gradient(50% 50% at 50% 50%, #2E0725 0%, #12031A 99.99%);
-    background-size: auto 100%;
-    background-position: center;
+  margin: 0;
+  padding: 0;
+  background: url("/public/assets/svg/background.svg") no-repeat,
+    radial-gradient(50% 50% at 50% 50%, #2e0725 0%, #12031a 99.99%);
+  background-size: auto 100%;
+  background-position: center;
+  font-family: Lato;
 }
 
 * {
-    outline: none
+  outline: none;
 }
